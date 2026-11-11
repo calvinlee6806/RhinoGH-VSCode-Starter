@@ -1,6 +1,8 @@
 # RhinoGH-VSCode-Starter
 
-A starter that turns VS Code into a build-and-debug environment for Grasshopper plug-ins on Rhino 8 (Windows). `F5` builds the plug-in, starts Rhino with Grasshopper open, loads the `.gha`, and attaches the debugger. Two ways to create the project:
+A template package that brings the native Visual Studio development environment for Rhino and Grasshopper plug-ins into VS Code. Pressing `F5` in VS Code builds the current project, starts Rhino with Grasshopper open, loads the `.gha` file, and attaches the debugger.
+
+Target: Rhino 8, Windows. Two ways to create the project:
 
 | Path | Who does the work | Command or action |
 |---|---|---|
