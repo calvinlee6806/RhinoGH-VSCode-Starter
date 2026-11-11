@@ -22,11 +22,20 @@ Installed by the user before either path. This repository installs none of them 
 | Windows PowerShell 5.1 | Included with Windows. Runs `setup.ps1` and `tools/launch-rhino.ps1`. |
 | Claude Code (Path 2 only) | A running Claude Code with access to this repository. |
 
+## Two separate folders
+
+| Folder | Role | Content |
+|---|---|---|
+| **Project folder** (example `D:\Dev\CoolTool`) | The new plug-in project | Must be new or empty. Receives only the files of `template/`. |
+| **Starter folder** (example `D:\Tools\RhinoGH-VSCode-Starter`) | This repository, cloned or unzipped | Holds `setup.ps1`, `template/` and the skill. Stays outside the project folder; it can be reused for further projects or deleted afterwards. |
+
+`git clone` and *Download ZIP* both create a wrapper folder named after the repository; the wrapper folder is the starter folder. `README.md`, `LICENSE`, `docs/` and `.gitignore` of this repository are not copied into the project.
+
 ## Path 1: Template
 
-1. **Choose the project folder.** A new folder, or an empty one. `setup.ps1` refuses a non-empty folder.
-2. **Get this repository.** `git clone` or *Code → Download ZIP* on GitHub, then unzip.
-3. **Create the project.** In PowerShell, from the repository root:
+1. **Create the project folder.** A new folder, or an empty one. `setup.ps1` refuses a non-empty folder.
+2. **Get this repository into a different location.** `git clone` or *Code → Download ZIP* on GitHub (then unzip) into the starter folder, outside the project folder.
+3. **Create the project.** In PowerShell, from the starter folder:
 
    ```powershell
    powershell -ExecutionPolicy Bypass -File .\setup.ps1 -Target D:\Dev\CoolTool -Name CoolTool
@@ -55,7 +64,7 @@ Rhino in the default location needs no path change. The template builds with the
 
 The skill `rhino-gh-vscode-setup` is in `.claude/skills/`. Claude Code loads it when this repository is the working folder.
 
-1. Clone this repository and open it in Claude Code.
+1. Create the project folder (new or empty). Clone this repository into a different location (the starter folder) and open the **starter folder** in Claude Code.
 2. Ask, for example: *Set up a Grasshopper plug-in project named CoolTool in D:\Dev\CoolTool.*
 3. The agent checks the prerequisites, runs `setup.ps1`, builds both targets, and reports the result. It reports missing prerequisites and does not install them.
 4. Close Rhino, open the project folder in VS Code, press `F5`. The agent cannot press `F5` for the user.
