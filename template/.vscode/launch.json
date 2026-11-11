@@ -1,0 +1,40 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Rhino 8 - netcore (debug)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build (before launch)",
+      "program": "",
+      "windows": {
+        "program": "C:\\Program Files\\Rhino 8\\System\\Rhino.exe",
+        "targetArchitecture": "x86_64",
+        "args": "/netcore /runscript=\"_Grasshopper\""
+      },
+      "env": {
+        "RHINO_PACKAGE_DIRS": "${workspaceFolder}/MyPlugin/bin/Debug/net7.0"
+      },
+      "cwd": "${workspaceFolder}",
+      "stopAtEntry": false,
+      "console": "internalConsole"
+    },
+    {
+      "name": "Rhino 8 - netfx (debug)",
+      "type": "clr",
+      "request": "launch",
+      "preLaunchTask": "build (before launch)",
+      "windows": {
+        "program": "C:\\Program Files\\Rhino 8\\System\\Rhino.exe",
+        "targetArchitecture": "x86_64",
+        "args": "/netfx /runscript=\"_Grasshopper\""
+      },
+      "env": {
+        "RHINO_PACKAGE_DIRS": "${workspaceFolder}/MyPlugin/bin/Debug/net48"
+      },
+      "cwd": "${workspaceFolder}",
+      "stopAtEntry": false,
+      "console": "internalConsole"
+    }
+  ]
+}

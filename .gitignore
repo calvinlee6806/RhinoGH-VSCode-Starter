@@ -1,0 +1,5 @@
+# Build output and editor state (also created if template/ is built in place)
+[Bb]in/
+[Oo]bj/
+.vs/
+*.user

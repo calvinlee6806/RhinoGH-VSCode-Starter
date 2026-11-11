@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- net7.0: Rhino 8 (.NET Core runtime). net48: Rhino 8 (.NET Framework runtime) and Rhino 7. -->
+    <TargetFrameworks>net7.0;net48</TargetFrameworks>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <!-- Grasshopper loads files with the .gha extension. -->
+    <TargetExt>.gha</TargetExt>
+    <NoWarn>NU1701</NoWarn>
+    <!-- net7.0 is past its support date; Rhino 8 still loads the net7.0 output. -->
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Version>1.0</Version>
+    <Title>MyPlugin</Title>
+    <Company>MyPlugin Authors</Company>
+    <Description>Grasshopper plug-in MyPlugin.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Compile-time reference only. Rhino provides Grasshopper and RhinoCommon at run time. -->
+    <PackageReference Include="Grasshopper" Version="8.0.23304.9001" ExcludeAssets="runtime" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
+    <!-- Compile-time reference to System.Drawing.Bitmap. Rhino 8 provides the assembly at run time. -->
+    <PackageReference Include="System.Drawing.Common" Version="7.0.0" ExcludeAssets="runtime" />
+  </ItemGroup>
+
+</Project>
