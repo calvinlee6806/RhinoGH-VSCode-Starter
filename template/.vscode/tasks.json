@@ -39,26 +39,15 @@
       }
     },
     {
-      "label": "build (before launch)",
-      "dependsOn": [
-        "check Rhino is closed",
-        "build"
-      ],
-      "dependsOrder": "sequence",
-      "problemMatcher": []
-    },
-    {
-      "label": "Rhino 8 - netcore (no debugger)",
+      "label": "build net48",
       "type": "process",
-      "command": "powershell.exe",
+      "command": "dotnet",
       "args": [
-        "-NoProfile",
-        "-ExecutionPolicy",
-        "Bypass",
-        "-File",
-        "${workspaceFolder}/tools/launch-rhino.ps1",
-        "-Runtime",
-        "netcore"
+        "build",
+        "${workspaceFolder}/MyPlugin/MyPlugin.csproj",
+        "-f",
+        "net48",
+        "-clp:NoSummary"
       ],
       "problemMatcher": "$msCompile",
       "presentation": {
@@ -67,7 +56,68 @@
       }
     },
     {
-      "label": "Rhino 8 - netfx (no debugger)",
+      "label": "build net8.0",
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "build",
+        "${workspaceFolder}/MyPlugin/MyPlugin.csproj",
+        "-f",
+        "net8.0",
+        "-clp:NoSummary"
+      ],
+      "problemMatcher": "$msCompile",
+      "presentation": {
+        "reveal": "always",
+        "clear": true
+      }
+    },
+    {
+      "label": "build net10.0",
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "build",
+        "${workspaceFolder}/MyPlugin/MyPlugin.csproj",
+        "-f",
+        "net10.0",
+        "-clp:NoSummary"
+      ],
+      "problemMatcher": "$msCompile",
+      "presentation": {
+        "reveal": "always",
+        "clear": true
+      }
+    },
+    {
+      "label": "build net48 (before launch)",
+      "dependsOn": [
+        "check Rhino is closed",
+        "build net48"
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    },
+    {
+      "label": "build net8.0 (before launch)",
+      "dependsOn": [
+        "check Rhino is closed",
+        "build net8.0"
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    },
+    {
+      "label": "build net10.0 (before launch)",
+      "dependsOn": [
+        "check Rhino is closed",
+        "build net10.0"
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    },
+    {
+      "label": "Rhino 8 (no debugger)",
       "type": "process",
       "command": "powershell.exe",
       "args": [
@@ -76,8 +126,46 @@
         "Bypass",
         "-File",
         "${workspaceFolder}/tools/launch-rhino.ps1",
-        "-Runtime",
-        "netfx"
+        "-Rhino",
+        "8"
+      ],
+      "problemMatcher": "$msCompile",
+      "presentation": {
+        "reveal": "always",
+        "clear": true
+      }
+    },
+    {
+      "label": "Rhino 9 (no debugger)",
+      "type": "process",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}/tools/launch-rhino.ps1",
+        "-Rhino",
+        "9"
+      ],
+      "problemMatcher": "$msCompile",
+      "presentation": {
+        "reveal": "always",
+        "clear": true
+      }
+    },
+    {
+      "label": "Rhino 7 (no debugger)",
+      "type": "process",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}/tools/launch-rhino.ps1",
+        "-Rhino",
+        "7"
       ],
       "problemMatcher": "$msCompile",
       "presentation": {

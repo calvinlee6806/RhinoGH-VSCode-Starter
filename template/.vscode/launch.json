@@ -2,10 +2,10 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Rhino 8 - netcore (debug)",
+      "name": "Rhino 8 (debug)",
       "type": "coreclr",
       "request": "launch",
-      "preLaunchTask": "build (before launch)",
+      "preLaunchTask": "build net8.0 (before launch)",
       "program": "",
       "windows": {
         "program": "C:\\Program Files\\Rhino 8\\System\\Rhino.exe",
@@ -13,25 +13,43 @@
         "args": "/netcore /runscript=\"_Grasshopper\""
       },
       "env": {
-        "RHINO_PACKAGE_DIRS": "${workspaceFolder}/MyPlugin/bin/Debug/net7.0"
+        "RHINO_PACKAGE_DIRS": "${workspaceFolder}/MyPlugin/bin/Debug/net8.0"
       },
       "cwd": "${workspaceFolder}",
       "stopAtEntry": false,
       "console": "internalConsole"
     },
     {
-      "name": "Rhino 8 - netfx (debug)",
-      "type": "clr",
+      "name": "Rhino 9 (debug)",
+      "type": "coreclr",
       "request": "launch",
-      "preLaunchTask": "build (before launch)",
+      "preLaunchTask": "build net10.0 (before launch)",
+      "program": "",
       "windows": {
-        "program": "C:\\Program Files\\Rhino 8\\System\\Rhino.exe",
+        "program": "C:\\Program Files\\Rhino 9\\System\\Rhino.exe",
         "targetArchitecture": "x86_64",
-        "args": "/netfx /runscript=\"_Grasshopper\""
+        "args": "/netcore /runscript=\"_Grasshopper\""
       },
       "env": {
-        "RHINO_PACKAGE_DIRS": "${workspaceFolder}/MyPlugin/bin/Debug/net48"
+        "RHINO_PACKAGE_DIRS": "${workspaceFolder}/MyPlugin/bin/Debug/net10.0"
       },
+      "cwd": "${workspaceFolder}",
+      "stopAtEntry": false,
+      "console": "internalConsole"
+    },
+    {
+      "name": "Rhino 7 (debug)",
+      "type": "clr",
+      "request": "launch",
+      "preLaunchTask": "build net48 (before launch)",
+      "program": "",
+      "windows": {
+        "program": "C:\\Program Files\\Rhino 7\\System\\Rhino.exe",
+        "targetArchitecture": "x86_64",
+        "args": "/runscript=\"_Grasshopper\""
+      },
+      // Rhino 7 ignores RHINO_PACKAGE_DIRS. Grasshopper loads MyPlugin/bin/Debug/net48 once that folder
+      // is added through the GrasshopperDeveloperSettings command (one-time step, see README.md).
       "cwd": "${workspaceFolder}",
       "stopAtEntry": false,
       "console": "internalConsole"

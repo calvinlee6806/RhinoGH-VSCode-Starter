@@ -1,6 +1,6 @@
 <Project>
 
-  <!-- net48 defaults to C# 7.3; 'latest' enables current syntax on both targets. -->
+  <!-- net48 defaults to C# 7.3; 'latest' enables current syntax on every target. -->
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>

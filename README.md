@@ -1,54 +1,86 @@
 # RhinoGH-VSCode-Starter
 
-A template package that brings the native Visual Studio development environment for Rhino and Grasshopper plug-ins into VS Code. Pressing `F5` in VS Code builds the current project, starts Rhino with Grasshopper open, loads the `.gha` file, and attaches the debugger.
+A project template that brings the Visual Studio workflow for Rhino and Grasshopper plug-ins to VS Code. Pressing `F5` builds the plug-in, starts Rhino with Grasshopper open, loads the `.gha`, and attaches the debugger.
 
-Target: Rhino 8, Windows. Two ways to create the project:
+One project builds for Rhino 7, Rhino 8 and Rhino 9. Two ways to create it:
 
-| Path | Who does the work | Command or action |
+| Path | Performed by | Command or action |
 |---|---|---|
-| **1. Template** | The user, with `setup.ps1` or a find-and-replace table | `setup.ps1 -Target <folder> -Name <PluginName>` |
-| **2. Skill** | A Claude Code agent | Open this repository in Claude Code and ask for a project in a folder |
+| **1. Script** | The user | `setup.ps1 -Target <folder> -Name <PluginName>` |
+| **2. Claude Code skill** | A Claude Code agent | Open this repository in Claude Code and ask for a project in a folder |
 
 Both paths copy the same `template/` folder, so the resulting project is identical.
 
-## Prerequisites
+## Compatibility
 
-Installed by the user before either path. This repository installs none of them and does not support their installation.
+| Rhino | Target framework | Rhino runtime | Compiled against |
+|---|---|---|---|
+| Rhino 7 | `net48` | .NET Framework 4.8 | `Grasshopper` 7.0.20314.3001 |
+| Rhino 8.21 or later | `net8.0` | .NET 8 (default since Rhino 8.20) | `Grasshopper` 8.21.25188.17001 |
+| Rhino 9 | `net10.0` | .NET 10 | `Grasshopper` 9.0.26300.9401 |
+
+- Each target compiles against the first supported release of its Rhino version, so the output loads in every later service release of that version.
+- A plug-in cannot target a newer .NET than the Rhino that loads it: Rhino 8 runs on .NET 8 and does not load a `net10.0` assembly. For this reason `net8.0` remains the Rhino 8 target although Microsoft support for .NET 8 has ended.
+- All three targets build by default. Unused ones are removed in one line ([Selecting Rhino versions](#selecting-rhino-versions)).
+- Windows only. Rhino for Mac, and VB or Python plug-ins, are out of scope.
+
+## Requirements
 
 | Requirement | Detail |
 |---|---|
-| Windows 10 or 11 | Rhino 8 for Windows. macOS is not supported. |
-| Rhino 8 | Default location `C:\Program Files\Rhino 8\System\Rhino.exe`. Another location is accepted (`-RhinoExe`). |
-| VS Code | With the **C#** extension (`ms-dotnettools.csharp`), which provides the debugger used by `F5`. **C# Dev Kit** (`ms-dotnettools.csdevkit`) is recommended for editor diagnostics; its licence terms are Microsoft's. |
-| .NET SDK 8 or newer | Builds both targets (`net7.0`, `net48`). Verified with 10.0.301. The first build downloads NuGet packages (`Grasshopper`, reference assemblies), so internet access is required once. |
+| Windows 10 or 11 | |
+| Rhino | At least one of Rhino 7, Rhino 8.21 or later, Rhino 9, in the default location `C:\Program Files\Rhino <n>\System\Rhino.exe` or any other location (`-Rhino7Exe`, `-Rhino8Exe`, `-Rhino9Exe`) |
+| VS Code | With the **C#** extension (`ms-dotnettools.csharp`), which provides the debugger. **C# Dev Kit** (`ms-dotnettools.csdevkit`) is recommended for editor diagnostics; its licence terms are Microsoft's. |
+| .NET SDK 10 | Builds all three targets. The first build downloads NuGet packages (`Grasshopper`, reference assemblies) and requires internet access once. |
 | Windows PowerShell 5.1 | Included with Windows. Runs `setup.ps1` and `tools/launch-rhino.ps1`. |
-| Claude Code (Path 2 only) | A running Claude Code with access to this repository. |
+| Claude Code | Path 2 only |
 
-## Two separate folders
+These components are installed separately; this repository does not install them.
 
-| Folder | Role | Content |
-|---|---|---|
-| **Project folder** (example `D:\Dev\CoolTool`) | The new plug-in project | Must be new or empty. Receives only the files of `template/`. |
-| **Starter folder** (example `D:\Tools\RhinoGH-VSCode-Starter`) | This repository, cloned or unzipped | Holds `setup.ps1`, `template/` and the skill. Stays outside the project folder; it can be reused for further projects or deleted afterwards. |
+## Quick start
 
-`git clone` and *Download ZIP* both create a wrapper folder named after the repository; the wrapper folder is the starter folder. `README.md`, `LICENSE`, `docs/` and `.gitignore` of this repository are not copied into the project.
+The **starter folder** (this repository, cloned or unzipped) and the **project folder** (the new plug-in) are separate. Only the contents of `template/` are copied into the project folder; the starter folder can be reused or deleted afterwards.
 
-## Path 1: Template
+### Path 1: Script
 
-1. **Create the project folder.** A new folder, or an empty one. `setup.ps1` refuses a non-empty folder.
-2. **Get this repository into a different location.** `git clone` or *Code → Download ZIP* on GitHub (then unzip) into the starter folder, outside the project folder.
-3. **Create the project.** In PowerShell, from the starter folder:
+1. Clone this repository, or download it as ZIP and extract it, into a location outside the new project folder.
+2. In PowerShell, from the starter folder:
 
    ```powershell
    powershell -ExecutionPolicy Bypass -File .\setup.ps1 -Target D:\Dev\CoolTool -Name CoolTool
    ```
 
-   `-Name` is the plug-in name: a valid C# identifier (letters, digits, underscore; no leading digit). It becomes the namespace, the project name, the `.gha` file name, and the Grasshopper tab name. Add `-RhinoExe '<full path>'` when Rhino 8 is not in the default location or the registry.
-4. **Test.** Open the project folder in VS Code, close Rhino, press `F5`, choose `Rhino 8 - netcore (debug)`. Rhino starts with Grasshopper open; the tab named after the plug-in holds the sample component `Sum`.
+   | Parameter | Rule |
+   |---|---|
+   | `-Target` | New or empty folder. A non-empty folder is refused and nothing is written. |
+   | `-Name` | Valid C# identifier (letters, digits, underscore; no leading digit). Becomes the namespace, project name, `.gha` file name and Grasshopper tab name. |
+   | `-Rhino7Exe`, `-Rhino8Exe`, `-Rhino9Exe` | Optional. Required only for a Rhino installed outside the default location and the registry. `-RhinoExe` is accepted as an alias of `-Rhino8Exe`. |
 
-### Manual alternative to `setup.ps1`
+3. Open the project folder in VS Code, close Rhino, press `F5`, and choose the profile of the installed Rhino version (`Rhino 8 (debug)`, `Rhino 9 (debug)` or `Rhino 7 (debug)`). Rhino starts with Grasshopper open; the tab named after the plug-in holds the sample component `Sum`.
 
-Copy the contents of `template/` into the project folder, then apply every row:
+Rhino 7 requires a one-time registration of the output folder through `GrasshopperDeveloperSettings`, because Rhino 7 does not read `RHINO_PACKAGE_DIRS`. The steps are in the `README.md` of the generated project.
+
+### Path 2: Claude Code skill
+
+The skill `rhino-gh-vscode-setup` is in `.claude/skills/` and loads when this repository is the working folder of Claude Code.
+
+1. Open the starter folder in Claude Code.
+2. Request a project, for example: *Set up a Grasshopper plug-in project named CoolTool in D:\Dev\CoolTool.*
+3. The agent checks the requirements, runs `setup.ps1`, builds all targets, and reports the result. Missing requirements are reported, not installed.
+4. Close Rhino, open the project folder in VS Code, and press `F5`.
+
+## Selecting Rhino versions
+
+All three targets build by default. To drop a Rhino version from a generated project:
+
+1. Remove its target from `<TargetFrameworks>` in `<Name>/<Name>.csproj` (the matching `ItemGroup` can be removed as well).
+2. Remove its profile from `.vscode/launch.json`, and from `<Name>/Properties/launchSettings.json` for Visual Studio.
+
+Each `F5` profile builds only its own target, so unused targets do not slow down debugging; they only add time to a full build.
+
+## Manual setup
+
+Equivalent to `setup.ps1`. Copy the contents of `template/` (without `bin/` and `obj/`) into the project folder, then apply every row:
 
 | Where | Find | Replace with |
 |---|---|---|
@@ -57,30 +89,14 @@ Copy the contents of `template/` into the project folder, then apply every row:
 | `MyPlugin/MyPluginInfo.cs` | `00000000-0000-4000-8000-0000000000a1` | New GUID (`[guid]::NewGuid()` in PowerShell) |
 | `MyPlugin/Components/SumComponent.cs` | `00000000-0000-4000-8000-0000000000b1` | New GUID |
 | `MyPlugin.sln` | `6E2F0B1C-4A3D-4C55-9B7E-1D2A3C4B5E01` (five places) | New GUID, upper case |
-| `.vscode/launch.json` (2 places), `MyPlugin/Properties/launchSettings.json` (2 places) | `C:\\Program Files\\Rhino 8\\System\\Rhino.exe` | Full path of `Rhino.exe`, backslashes doubled |
-| `tools/launch-rhino.ps1` (default of `-RhinoExe`) | `C:\Program Files\Rhino 8\System\Rhino.exe` | Full path of `Rhino.exe` |
+| `.vscode/launch.json`, `MyPlugin/Properties/launchSettings.json` | `C:\\Program Files\\Rhino <n>\\System\\Rhino.exe` (one per Rhino version in each file) | Full path of `Rhino.exe`, backslashes doubled |
+| `tools/launch-rhino.ps1` (defaults of `-Rhino7Exe`, `-Rhino8Exe`, `-Rhino9Exe`) | `C:\Program Files\Rhino <n>\System\Rhino.exe` | Full path of `Rhino.exe` |
 
-Rhino in the default location needs no path change. The template builds with the name `MyPlugin` unchanged.
+Rhino in the default location needs no path change. The template also builds with the name `MyPlugin` unchanged.
 
-## Path 2: Skill
+## Project layout
 
-The skill `rhino-gh-vscode-setup` is in `.claude/skills/`. Claude Code loads it when this repository is the working folder.
-
-1. Create the project folder (new or empty). Clone this repository into a different location (the starter folder) and open the **starter folder** in Claude Code.
-2. Ask, for example: *Set up a Grasshopper plug-in project named CoolTool in D:\Dev\CoolTool.*
-3. The agent checks the prerequisites, runs `setup.ps1`, builds both targets, and reports the result. It reports missing prerequisites and does not install them.
-4. Close Rhino, open the project folder in VS Code, press `F5`. The agent cannot press `F5` for the user.
-
-## Contents
-
-| Path | Content |
-|---|---|
-| `template/` | The project that is copied: solution, project, sample component, `.vscode/`, `tools/` |
-| `setup.ps1` | Path 1 script: copy, rename, new GUIDs, Rhino path |
-| `.claude/skills/rhino-gh-vscode-setup/` | Path 2 skill |
-| `docs/how-it-works.md` | The mechanism behind `F5`, and the limits |
-
-Layout of the generated project (the Visual Studio default: solution folder, project folder, `Properties/`):
+The generated project follows the Visual Studio default layout (solution folder, project folder, `Properties/`):
 
 ```text
 <Target>/
@@ -97,13 +113,26 @@ Layout of the generated project (the Visual Studio default: solution folder, pro
    └─ Properties/      launchSettings.json, PlatformSupport.cs
 ```
 
-## Scope and verification
+## Troubleshooting
 
-| Item | State |
+| Symptom | Cause and fix |
 |---|---|
-| Rhino 8 on Windows, C# | Supported |
-| Rhino 7, Rhino for Mac, VB or Python plug-ins | Not supported |
-| Both targets build with 0 warnings and 0 errors (SDK 10.0.301) | Verified on the template and on a project generated by `setup.ps1` |
-| `setup.ps1`: valid name, new GUIDs, no `MyPlugin` left, Rhino path rewrite, refusal of invalid name, missing Rhino and non-empty folder | Verified |
-| `tools/launch-rhino.ps1 -DryRun` for `netcore` and `netfx` | Verified |
-| `F5` with the debugger attached, and loading the `.gha` in Rhino | The `.vscode/` files are taken from a project where this works; the generated project has not been run through `F5` itself |
+| `error GH601: Rhino is running` | Rhino keeps the loaded `.gha` open, so a build cannot replace it. Close Rhino and press `F5` again. The scripts never close Rhino. |
+| `error GH602: Rhino <n> executable not found` | Rhino is not in the default location. Rerun `setup.ps1` with `-Rhino<n>Exe`, or edit the path in `.vscode/launch.json` and `tools/launch-rhino.ps1`. |
+| `F5` reports that `Rhino.exe` does not exist | The selected profile belongs to a Rhino version that is not installed. Choose another profile, or remove the version ([Selecting Rhino versions](#selecting-rhino-versions)). |
+| `net10.0` fails with `NETSDK1045` | The installed .NET SDK is older than 10. Install .NET SDK 10, or remove the `net10.0` target. |
+| The plug-in tab is missing in Rhino 7 | The `net48` output folder is not registered in `GrasshopperDeveloperSettings`. See the `README.md` of the generated project. |
+| Each component appears twice | Grasshopper loads the plug-in from two folders: `RHINO_PACKAGE_DIRS` points at `bin/Debug` instead of one target folder, or a build folder registered in `GrasshopperDeveloperSettings` is read in addition to `RHINO_PACKAGE_DIRS`. Keep one source per Rhino session. |
+
+## Repository contents
+
+| Path | Content |
+|---|---|
+| `template/` | The project that is copied: solution, project, sample component, `.vscode/`, `tools/` |
+| `setup.ps1` | Path 1 script: copy, rename, new GUIDs, Rhino paths |
+| `.claude/skills/rhino-gh-vscode-setup/` | Path 2 skill |
+| `docs/how-it-works.md` | The mechanism behind `F5`, and its limits |
+
+## License
+
+[MIT](LICENSE)
